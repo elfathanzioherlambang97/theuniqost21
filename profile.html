@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Diri - The Uniqost 21</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .auth-wrap {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #FDF2F8 0%, #FCE7F3 50%, #FDF2F8 100%);
+      display: flex; align-items: center; justify-content: center;
+      padding: 32px;
+    }
+    .auth-card {
+      background: white; border-radius: 24px;
+      padding: 40px; width: 100%; max-width: 480px;
+      box-shadow: 0 8px 40px rgba(236,72,153,0.12);
+    }
+    .auth-logo {
+      display: flex; align-items: center;
+      justify-content: center; gap: 12px;
+      margin-bottom: 28px;
+    }
+    .auth-logo img { height: 60px; width: auto; }
+    .auth-logo-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 600; color: #EC4899;
+    }
+    .auth-logo-tagline { font-size: 10px; color: #6B7280; }
+    .auth-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px; font-weight: 600;
+      color: #1F2937; text-align: center; margin-bottom: 6px;
+    }
+    .auth-sub {
+      font-size: 14px; color: #6B7280;
+      text-align: center; margin-bottom: 32px;
+    }
+    .form-group { margin-bottom: 18px; }
+    .form-group label {
+      display: block; font-size: 13px;
+      font-weight: 500; color: #1F2937; margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%; padding: 12px 16px;
+      border: 1.5px solid #FCE7F3; border-radius: 12px;
+      font-size: 14px; font-family: 'DM Sans', sans-serif;
+      color: #1F2937; outline: none; transition: all .2s;
+      resize: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: #EC4899;
+      box-shadow: 0 0 0 3px rgba(236,72,153,0.1);
+    }
+    .form-note {
+      font-size: 11px; color: #9CA3AF; margin-top: 4px;
+    }
+    .btn-submit {
+      width: 100%; padding: 14px;
+      background: #EC4899; color: white;
+      border: none; border-radius: 99px;
+      font-size: 15px; font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer; transition: all .2s;
+      margin-top: 8px;
+    }
+    .btn-submit:hover { background: #DB2777; }
+    .error-msg {
+      background: #FEE2E2; color: #991B1B;
+      padding: 10px 16px; border-radius: 10px;
+      font-size: 13px; margin-bottom: 16px; display: none;
+    }
+    .success-msg {
+      background: #D1FAE5; color: #065F46;
+      padding: 10px 16px; border-radius: 10px;
+      font-size: 13px; margin-bottom: 16px; display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="auth-wrap">
+    <div class="auth-card">
+
+      <div class="auth-logo">
+        <img src="assets/logo.png" alt="The Uniqost 21">
+        <div>
+          <div class="auth-logo-name">The Uniqost 21</div>
+          <div class="auth-logo-tagline">- Enjoy Your Stay With Unique -</div>
+        </div>
+      </div>
+
+      <div class="auth-title">Lengkapi Data Diri 🌸</div>
+      <div class="auth-sub">Data diri diperlukan sebelum kamu bisa booking kamar</div>
+
+      <div class="error-msg" id="error-msg"></div>
+      <div class="success-msg" id="success-msg"></div>
+
+      <div class="form-group">
+        <label>Nama Lengkap</label>
+        <input type="text" id="full_name" placeholder="Sesuai KTP">
+      </div>
+      <div class="form-group">
+        <label>Nomor WhatsApp</label>
+        <input type="tel" id="phone" placeholder="08xxxxxxxxxx"
+          oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+        <div class="form-note">Hanya angka, tanpa tanda hubung atau spasi</div>
+      </div>
+      <div class="form-group">
+        <label>Nomor KTP</label>
+        <input type="tel" id="id_card" placeholder="16 digit nomor KTP"
+          oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+          maxlength="16">
+        <div class="form-note">Hanya angka, 16 digit</div>
+      </div>
+      <div class="form-group">
+        <label>Alamat Asal</label>
+        <textarea id="address" rows="3" placeholder="Alamat lengkap sesuai KTP"></textarea>
+      </div>
+
+      <button class="btn-submit" onclick="simpanProfile()">Simpan & Lanjutkan</button>
+
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script>
+    // Cek login dulu
+    async function cekLogin() {
+      const { data: { user } } = await db.auth.getUser()
+      if (!user) window.location.href = 'login.html'
+    }
+
+    async function simpanProfile() {
+      const full_name = document.getElementById('full_name').value.trim()
+      const phone = document.getElementById('phone').value.trim()
+      const id_card = document.getElementById('id_card').value.trim()
+      const address = document.getElementById('address').value.trim()
+      const errorMsg = document.getElementById('error-msg')
+      const successMsg = document.getElementById('success-msg')
+
+      errorMsg.style.display = 'none'
+      successMsg.style.display = 'none'
+
+      if (!full_name || !phone || !id_card || !address) {
+        errorMsg.style.display = 'block'
+        errorMsg.textContent = 'Semua data wajib diisi!'
+        return
+      }
+
+      if (id_card.length !== 16) {
+        errorMsg.style.display = 'block'
+        errorMsg.textContent = 'Nomor KTP harus 16 digit!'
+        return
+      }
+
+      const { data: { user } } = await db.auth.getUser()
+
+      const { error } = await db.from('profiles').upsert({
+        id: user.id,
+        full_name,
+        phone,
+        id_card,
+        address
+      })
+
+      if (error) {
+        errorMsg.style.display = 'block'
+        errorMsg.textContent = 'Gagal menyimpan data: ' + error.message
+        return
+      }
+
+      successMsg.style.display = 'block'
+      successMsg.textContent = 'Data berhasil disimpan! Mengalihkan...'
+
+      setTimeout(() => {
+        window.location.href = 'index.html'
+      }, 1500)
+    }
+
+    cekLogin()
+  </script>
+</body>
+</html>

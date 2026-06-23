@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Uniqost 21</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav>
+    <a href="index.html" class="logo">
+      <img src="assets/logo.png" alt="The Uniqost 21">
+      <div class="logo-text">
+        <div class="logo-name">The Uniqost 21</div>
+        <div class="logo-tagline">- Enjoy Your Stay With Unique -</div>
+      </div>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Beranda</a>
+      <a href="#kamar">Kamar</a>
+      <a href="#fasilitas">Fasilitas</a>
+      <a href="login.html" id="btn-login">Login</a>
+      <a href="register.html" id="btn-register" class="btn-primary">Daftar</a>
+      <a href="#" id="btn-logout" style="display:none">Logout</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-logo">
+      <img src="assets/logo.png" alt="The Uniqost 21">
+      <div class="hero-logo-text">
+        <div class="hero-logo-name">The Uniqost 21</div>
+        <div class="hero-logo-tagline">- Enjoy Your Stay With Unique -</div>
+      </div>
+    </div>
+    <div class="hero-badge">🌸 Hunian Nyaman untuk Putri Terbaik</div>
+    <h1>Temukan Kamar<br><em>Impianmu</em> di Sini</h1>
+    <p>Kos putri dengan suasana bersih, aman, dan nyaman. Fasilitas lengkap dengan harga terjangkau.</p>
+    <div class="hero-btns">
+      <a href="#kamar" class="btn-hero-main">Lihat Kamar ✨</a>
+      <a href="#fasilitas" class="btn-hero-outline">Fasilitas Kami</a>
+    </div>
+    <div class="stats">
+      <div class="stat">
+        <div class="stat-num" id="stat-tersedia">-</div>
+        <div class="stat-label">Kamar Tersedia</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">50+</div>
+        <div class="stat-label">Penyewa Puas</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5★</div>
+        <div class="stat-label">Rating Hunian</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FASILITAS -->
+  <div class="section" id="fasilitas">
+    <div class="section-label">Yang Kami Sediakan</div>
+    <div class="section-title">Fasilitas Unggulan</div>
+    <div class="section-sub">Semua yang kamu butuhkan sudah tersedia</div>
+    <div class="fasilitas-grid">
+      <div class="fasil-card"><div class="fasil-icon">🚿</div><div class="fasil-name">Kamar Mandi Luar</div></div>
+      <div class="fasil-card"><div class="fasil-icon">🍲</div><div class="fasil-name">Dapur Beserta Alat Masak & Makan</div></div>
+      <div class="fasil-card"><div class="fasil-icon">❄️</div><div class="fasil-name">Kulkas Bersama</div></div>
+      <div class="fasil-card"><div class="fasil-icon">🔒</div><div class="fasil-name">Keamanan CCTV 24 Jam</div></div>
+      <div class="fasil-card"><div class="fasil-icon">🅿️</div><div class="fasil-name">Parkir Motor</div></div>
+      <div class="fasil-card"><div class="fasil-icon">🕌</div><div class="fasil-name">Mushola di Dalam Rumah</div></div>
+      <div class="fasil-card"><div class="fasil-icon">☀️ 👕</div><div class="fasil-name">Jemuran Baju</div></div>
+      <div class="fasil-card"><div class="fasil-icon">⚡</div><div class="fasil-name">Free Token Listrik</div></div>
+      <div class="fasil-card"><div class="fasil-icon">🚰</div><div class="fasil-name">Free Air PDAM</div></div>
+      <div class="fasil-card"><div class="fasil-icon">📶</div><div class="fasil-name">Free WiFi Speed 10Mb</div></div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- KAMAR -->
+  <div class="rooms-wrap" id="kamar">
+    <div class="rooms-inner">
+      <div class="section-label">Pilihan Kamar</div>
+      <div class="section-title">Kamar Kami</div>
+      <div class="section-sub">Pilih kamar sesuai kebutuhan dan budgetmu</div>
+      <div id="room-list">
+        <p style="text-align:center; color:#9CA3AF; padding: 40px 0;">Memuat data kamar...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <img src="assets/logo.png" alt="The Uniqost 21">
+        <div>
+          <div class="footer-logo-name">The Uniqost 21</div>
+          <div class="footer-logo-tagline">- Enjoy Your Stay With Unique -</div>
+        </div>
+      </div>
+      <div class="footer-info">
+        <div>Jl. Contoh No. 123</div>
+        <div>📞 08xx-xxxx-xxxx</div>
+        <div>© 2024 The Uniqost 21</div>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase.js"></script>
+  <script src="index.js"></script>
+
+</body>
+</html>
