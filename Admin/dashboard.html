@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Admin - The Uniqost 21</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    body { background: #F9FAFB; }
+    .admin-wrap { display: flex; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 240px; background: white;
+      border-right: 1px solid #FCE7F3;
+      padding: 24px 0; position: fixed;
+      height: 100vh; overflow-y: auto;
+    }
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 20px 24px; border-bottom: 1px solid #FCE7F3;
+    }
+    .sidebar-logo img { height: 40px; }
+    .sidebar-logo-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px; font-weight: 600; color: #EC4899;
+    }
+    .sidebar-menu { padding: 16px 12px; }
+    .sidebar-label {
+      font-size: 10px; font-weight: 500; color: #9CA3AF;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      padding: 0 8px; margin-bottom: 8px; margin-top: 16px;
+    }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      text-decoration: none; color: #6B7280;
+      font-size: 14px; font-weight: 500;
+      transition: all .2s; margin-bottom: 4px;
+    }
+    .sidebar-item:hover { background: #FDF2F8; color: #EC4899; }
+    .sidebar-item.active { background: #FCE7F3; color: #EC4899; }
+    .sidebar-item span { font-size: 18px; }
+
+    /* MAIN */
+    .main { margin-left: 240px; padding: 32px; flex: 1; }
+    .main-header { margin-bottom: 32px; }
+    .main-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px; font-weight: 600; color: #1F2937;
+    }
+    .main-sub { font-size: 14px; color: #6B7280; margin-top: 4px; }
+
+    /* STATS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px; margin-bottom: 32px;
+    }
+    .stat-card {
+      background: white; border-radius: 16px;
+      padding: 20px; box-shadow: 0 2px 12px rgba(236,72,153,0.06);
+    }
+    .stat-card-icon { font-size: 32px; margin-bottom: 12px; }
+    .stat-card-num {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px; font-weight: 600; color: #EC4899;
+    }
+    .stat-card-label { font-size: 13px; color: #6B7280; margin-top: 4px; }
+
+    /* TABLE */
+    .table-card {
+      background: white; border-radius: 16px;
+      padding: 24px; box-shadow: 0 2px 12px rgba(236,72,153,0.06);
+      margin-bottom: 24px;
+    }
+    .table-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 600;
+      color: #1F2937; margin-bottom: 16px;
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left; font-size: 12px; font-weight: 500;
+      color: #9CA3AF; text-transform: uppercase;
+      letter-spacing: 1px; padding: 10px 12px;
+      border-bottom: 1px solid #FCE7F3;
+    }
+    td {
+      padding: 12px; font-size: 14px; color: #1F2937;
+      border-bottom: 1px solid #F9FAFB;
+    }
+    .badge {
+      display: inline-block; padding: 3px 10px;
+      border-radius: 99px; font-size: 12px; font-weight: 500;
+    }
+    .badge-tersedia { background: #D1FAE5; color: #065F46; }
+    .badge-booking  { background: #FEF3C7; color: #92400E; }
+    .badge-dipesan  { background: #FCE7F3; color: #9D174D; }
+    .badge-penuh    { background: #FEE2E2; color: #991B1B; }
+    .badge-pending  { background: #FEF3C7; color: #92400E; }
+    .badge-verifikasi { background: #D1FAE5; color: #065F46; }
+  </style>
+</head>
+<body>
+<div class="admin-wrap">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <img src="../assets/logo.png" alt="logo">
+      <div class="sidebar-logo-name">The Uniqost 21</div>
+    </div>
+    <div class="sidebar-menu">
+      <div class="sidebar-label">Menu</div>
+      <a href="dashboard.html" class="sidebar-item active">
+        <span>📊</span> Dashboard
+      </a>
+      <a href="bookings.html" class="sidebar-item">
+        <span>📋</span> Data Booking
+      </a>
+      <a href="rooms.html" class="sidebar-item">
+        <span>🏠</span> Kelola Kamar
+      </a>
+      <div class="sidebar-label">Akun</div>
+      <a href="../index.html" class="sidebar-item">
+        <span>🌐</span> Lihat Website
+      </a>
+      <a href="#" class="sidebar-item" onclick="logout()">
+        <span>🚪</span> Logout
+      </a>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="main-header">
+      <div class="main-title">Dashboard 📊</div>
+      <div class="main-sub">Selamat datang kembali!</div>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-card-icon">🟢</div>
+        <div class="stat-card-num" id="jml-tersedia">-</div>
+        <div class="stat-card-label">Kamar Tersedia</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">🟡</div>
+        <div class="stat-card-num" id="jml-booking">-</div>
+        <div class="stat-card-label">Kamar Dibooking</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">🔴</div>
+        <div class="stat-card-num" id="jml-penuh">-</div>
+        <div class="stat-card-label">Kamar Penuh</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-card-icon">💳</div>
+        <div class="stat-card-num" id="jml-payment">-</div>
+        <div class="stat-card-label">Menunggu Verifikasi</div>
+      </div>
+    </div>
+
+    <!-- BOOKING TERBARU -->
+    <div class="table-card">
+      <div class="table-title">Booking Terbaru</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th>Kamar</th>
+            <th>Tipe</th>
+            <th>Tanggal Masuk</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="booking-list">
+          <tr><td colspan="5" style="text-align:center;color:#9CA3AF">Memuat...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PEMBAYARAN MENUNGGU -->
+    <div class="table-card">
+      <div class="table-title">Pembayaran Menunggu Verifikasi</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th>Kamar</th>
+            <th>Nominal</th>
+            <th>Status</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="payment-list">
+          <tr><td colspan="5" style="text-align:center;color:#9CA3AF">Memuat...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../supabase.js"></script>
+<script>
+  // GANTI EMAIL ADMIN KAMU DI SINI
+  const ADMIN_EMAIL = 'theuniqost21@gmail.com'
+
+  async function cekAdmin() {
+    const { data: { user } } = await db.auth.getUser()
+    if (!user || user.email !== ADMIN_EMAIL) {
+      window.location.href = '../login.html'
+    }
+  }
+
+  async function loadStats() {
+    const { data: rooms } = await db.from('rooms').select('status')
+    const tersedia = rooms.filter(r => r.status === 'tersedia').length
+    const booking  = rooms.filter(r => r.status === 'booking').length
+    const penuh    = rooms.filter(r => r.status === 'penuh' || r.status === 'dipesan').length
+    document.getElementById('jml-tersedia').textContent = tersedia
+    document.getElementById('jml-booking').textContent  = booking
+    document.getElementById('jml-penuh').textContent    = penuh
+
+    const { data: payments } = await db.from('payments')
+      .select('*').eq('status', 'menunggu verifikasi')
+    document.getElementById('jml-payment').textContent = payments.length
+  }
+
+  async function loadBookings() {
+    const { data } = await db.from('bookings')
+      .select('*, profiles(full_name), rooms(name)')
+      .order('created_at', { ascending: false })
+      .limit(5)
+
+    const tbody = document.getElementById('booking-list')
+    if (!data || data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#9CA3AF">Belum ada booking</td></tr>'
+      return
+    }
+
+    tbody.innerHTML = data.map(b => `
+      <tr>
+        <td>${b.profiles?.full_name || '-'}</td>
+        <td>${b.rooms?.name || '-'}</td>
+        <td>${b.type === 'pesan' ? '💳 Pesan' : '📅 Booking'}</td>
+        <td>${b.check_in_date}</td>
+        <td><span class="badge badge-${b.status}">${b.status}</span></td>
+      </tr>
+    `).join('')
+  }
+
+  async function loadPayments() {
+    const { data } = await db.from('payments')
+      .select('*, profiles(full_name), bookings(*, rooms(name))')
+      .eq('status', 'menunggu verifikasi')
+      .order('created_at', { ascending: false })
+
+    const tbody = document.getElementById('payment-list')
+    if (!data || data.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#9CA3AF">Tidak ada pembayaran menunggu</td></tr>'
+      return
+    }
+
+    tbody.innerHTML = data.map(p => `
+      <tr>
+        <td>${p.profiles?.full_name || '-'}</td>
+        <td>${p.bookings?.rooms?.name || '-'}</td>
+        <td>Rp ${p.amount.toLocaleString('id-ID')}</td>
+        <td><span class="badge badge-pending">Menunggu</span></td>
+        <td>
+          <button onclick="verifikasiPayment('${p.id}', '${p.bookings?.room_id}')"
+            style="background:#EC4899;color:white;border:none;padding:6px 14px;
+            border-radius:99px;font-size:12px;cursor:pointer;">
+            ✅ Verifikasi
+          </button>
+        </td>
+      </tr>
+    `).join('')
+  }
+
+  async function verifikasiPayment(paymentId, roomId) {
+    if (!confirm('Verifikasi pembayaran ini?')) return
+
+    await db.from('payments')
+      .update({ status: 'terverifikasi' })
+      .eq('id', paymentId)
+
+    await db.from('rooms')
+      .update({ status: 'penuh' })
+      .eq('id', roomId)
+
+    alert('Pembayaran terverifikasi! Status kamar diupdate.')
+    loadStats()
+    loadPayments()
+  }
+
+  async function logout() {
+    await db.auth.signOut()
+    window.location.href = '../login.html'
+  }
+
+  cekAdmin()
+  loadStats()
+  loadBookings()
+  loadPayments()
+</script>
+</body>
+</html>

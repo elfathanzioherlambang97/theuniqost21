@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Data Booking - The Uniqost 21</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    body { background: #F9FAFB; }
+    .admin-wrap { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 240px; background: white;
+      border-right: 1px solid #FCE7F3;
+      padding: 24px 0; position: fixed;
+      height: 100vh; overflow-y: auto;
+    }
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 20px 24px; border-bottom: 1px solid #FCE7F3;
+    }
+    .sidebar-logo img { height: 40px; }
+    .sidebar-logo-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px; font-weight: 600; color: #EC4899;
+    }
+    .sidebar-menu { padding: 16px 12px; }
+    .sidebar-label {
+      font-size: 10px; font-weight: 500; color: #9CA3AF;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      padding: 0 8px; margin-bottom: 8px; margin-top: 16px;
+    }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      text-decoration: none; color: #6B7280;
+      font-size: 14px; font-weight: 500;
+      transition: all .2s; margin-bottom: 4px;
+    }
+    .sidebar-item:hover { background: #FDF2F8; color: #EC4899; }
+    .sidebar-item.active { background: #FCE7F3; color: #EC4899; }
+    .sidebar-item span { font-size: 18px; }
+    .main { margin-left: 240px; padding: 32px; flex: 1; }
+    .main-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px; font-weight: 600;
+      color: #1F2937; margin-bottom: 4px;
+    }
+    .main-sub { font-size: 14px; color: #6B7280; margin-bottom: 28px; }
+    .filter-bar {
+      display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+    }
+    .filter-btn {
+      padding: 8px 18px; border-radius: 99px;
+      border: 1.5px solid #FCE7F3; background: white;
+      font-size: 13px; font-weight: 500; color: #6B7280;
+      cursor: pointer; transition: all .2s;
+    }
+    .filter-btn.active {
+      background: #EC4899; color: white; border-color: #EC4899;
+    }
+    .table-card {
+      background: white; border-radius: 16px;
+      padding: 24px; box-shadow: 0 2px 12px rgba(236,72,153,0.06);
+    }
+    table { width: 100%; border-collapse: collapse; }
+    th {
+      text-align: left; font-size: 12px; font-weight: 500;
+      color: #9CA3AF; text-transform: uppercase;
+      letter-spacing: 1px; padding: 10px 12px;
+      border-bottom: 1px solid #FCE7F3;
+    }
+    td {
+      padding: 12px; font-size: 14px; color: #1F2937;
+      border-bottom: 1px solid #F9FAFB; vertical-align: top;
+    }
+    .badge {
+      display: inline-block; padding: 3px 10px;
+      border-radius: 99px; font-size: 12px; font-weight: 500;
+    }
+    .badge-booking  { background: #FEF3C7; color: #92400E; }
+    .badge-pesan    { background: #FCE7F3; color: #9D174D; }
+    .badge-pending  { background: #FEF3C7; color: #92400E; }
+    .wa-btn {
+      display: inline-flex; align-items: center; gap: 4px;
+      background: #25D366; color: white;
+      padding: 5px 12px; border-radius: 99px;
+      font-size: 12px; text-decoration: none;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+<div class="admin-wrap">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <img src="../assets/logo.png" alt="logo">
+      <div class="sidebar-logo-name">The Uniqost 21</div>
+    </div>
+    <div class="sidebar-menu">
+      <div class="sidebar-label">Menu</div>
+      <a href="dashboard.html" class="sidebar-item">
+        <span>📊</span> Dashboard
+      </a>
+      <a href="bookings.html" class="sidebar-item active">
+        <span>📋</span> Data Booking
+      </a>
+      <a href="rooms.html" class="sidebar-item">
+        <span>🏠</span> Kelola Kamar
+      </a>
+      <div class="sidebar-label">Akun</div>
+      <a href="../index.html" class="sidebar-item">
+        <span>🌐</span> Lihat Website
+      </a>
+      <a href="#" class="sidebar-item" onclick="logout()">
+        <span>🚪</span> Logout
+      </a>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="main-title">Data Booking 📋</div>
+    <div class="main-sub">Semua data booking dan pesanan masuk</div>
+
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filter('semua')">Semua</button>
+      <button class="filter-btn" onclick="filter('booking')">📅 Booking</button>
+      <button class="filter-btn" onclick="filter('pesan')">💳 Pesan Sekarang</button>
+    </div>
+
+    <div class="table-card">
+      <table>
+        <thead>
+          <tr>
+            <th>Nama Penyewa</th>
+            <th>No. WhatsApp</th>
+            <th>Kamar</th>
+            <th>Tipe</th>
+            <th>Tgl Masuk</th>
+            <th>Catatan</th>
+            <th>Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="booking-list">
+          <tr><td colspan="7" style="text-align:center;color:#9CA3AF">Memuat...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../supabase.js"></script>
+<script>
+  const ADMIN_EMAIL = 'emailadmin@gmail.com'
+  let allData = []
+
+  async function cekAdmin() {
+    const { data: {

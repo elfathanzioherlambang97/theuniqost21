@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kelola Kamar - The Uniqost 21</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <style>
+    body { background: #F9FAFB; }
+    .admin-wrap { display: flex; min-height: 100vh; }
+    .sidebar {
+      width: 240px; background: white;
+      border-right: 1px solid #FCE7F3;
+      padding: 24px 0; position: fixed;
+      height: 100vh; overflow-y: auto;
+    }
+    .sidebar-logo {
+      display: flex; align-items: center; gap: 10px;
+      padding: 0 20px 24px; border-bottom: 1px solid #FCE7F3;
+    }
+    .sidebar-logo img { height: 40px; }
+    .sidebar-logo-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 14px; font-weight: 600; color: #EC4899;
+    }
+    .sidebar-menu { padding: 16px 12px; }
+    .sidebar-label {
+      font-size: 10px; font-weight: 500; color: #9CA3AF;
+      text-transform: uppercase; letter-spacing: 1.5px;
+      padding: 0 8px; margin-bottom: 8px; margin-top: 16px;
+    }
+    .sidebar-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 12px; border-radius: 10px;
+      text-decoration: none; color: #6B7280;
+      font-size: 14px; font-weight: 500;
+      transition: all .2s; margin-bottom: 4px;
+    }
+    .sidebar-item:hover { background: #FDF2F8; color: #EC4899; }
+    .sidebar-item.active { background: #FCE7F3; color: #EC4899; }
+    .sidebar-item span { font-size: 18px; }
+    .main { margin-left: 240px; padding: 32px; flex: 1; }
+    .main-header {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 28px;
+    }
+    .main-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 28px; font-weight: 600; color: #1F2937;
+    }
+    .main-sub { font-size: 14px; color: #6B7280; margin-top: 4px; }
+    .btn-add {
+      background: #EC4899; color: white;
+      border: none; padding: 12px 24px;
+      border-radius: 99px; font-size: 14px;
+      font-weight: 500; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-add:hover { background: #DB2777; }
+
+    /* ROOM GRID */
+    .room-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .room-card {
+      background: white; border-radius: 16px;
+      overflow: hidden; box-shadow: 0 2px 12px rgba(236,72,153,0.06);
+    }
+    .room-card-img {
+      width: 100%; height: 180px; object-fit: cover;
+      background: linear-gradient(135deg, #FCE7F3, #F9A8D4);
+      display: flex; align-items: center;
+      justify-content: center; font-size: 48px;
+    }
+    .room-card-img img {
+      width: 100%; height: 180px; object-fit: cover;
+    }
+    .room-card-body { padding: 16px; }
+    .room-card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px; font-weight: 600;
+      color: #1F2937; margin-bottom: 4px;
+    }
+    .room-card-price {
+      font-size: 15px; font-weight: 600;
+      color: #EC4899; margin-bottom: 8px;
+    }
+    .badge {
+      display: inline-block; padding: 3px 10px;
+      border-radius: 99px; font-size: 12px; font-weight: 500;
+      margin-bottom: 12px;
+    }
+    .badge-tersedia { background: #D1FAE5; color: #065F46; }
+    .badge-booking  { background: #FEF3C7; color: #92400E; }
+    .badge-dipesan  { background: #FCE7F3; color: #9D174D; }
+    .badge-penuh    { background: #FEE2E2; color: #991B1B; }
+    .room-card-actions {
+      display: flex; gap: 8px; margin-top: 12px;
+    }
+    .btn-edit {
+      flex: 1; padding: 8px;
+      border-radius: 99px; font-size: 13px;
+      border: 1.5px solid #EC4899; color: #EC4899;
+      background: white; cursor: pointer; transition: all .2s;
+    }
+    .btn-edit:hover { background: #FCE7F3; }
+    .btn-delete {
+      flex: 1; padding: 8px;
+      border-radius: 99px; font-size: 13px;
+      border: 1.5px solid #FEE2E2; color: #991B1B;
+      background: white; cursor: pointer; transition: all .2s;
+    }
+    .btn-delete:hover { background: #FEE2E2; }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex; align-items: center;
+      justify-content: center; z-index: 999;
+      padding: 20px; display: none;
+    }
+    .modal {
+      background: white; border-radius: 24px;
+      padding: 32px; width: 100%; max-width: 480px;
+      max-height: 90vh; overflow-y: auto;
+    }
+    .modal-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px; font-weight: 600;
+      color: #1F2937; margin-bottom: 24px;
+    }
+    .form-group { margin-bottom: 16px; }
+    .form-group label {
+      display: block; font-size: 13px;
+      font-weight: 500; color: #1F2937; margin-bottom: 6px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%; padding: 12px 16px;
+      border: 1.5px solid #FCE7F3; border-radius: 12px;
+      font-size: 14px; font-family: 'DM Sans', sans-serif;
+      color: #1F2937; outline: none; transition: all .2s; resize: none;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: #EC4899;
+      box-shadow: 0 0 0 3px rgba(236,72,153,0.1);
+    }
+    .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+    .btn-save {
+      flex: 1; padding: 12px;
+      background: #EC4899; color: white;
+      border: none; border-radius: 99px;
+      font-size: 14px; font-weight: 500;
+      font-family: 'DM Sans', sans-serif; cursor: pointer;
+    }
+    .btn-save:hover { background: #DB2777; }
+    .btn-cancel {
+      flex: 1; padding: 12px;
+      background: white; color: #6B7280;
+      border: 1.5px solid #E5E7EB; border-radius: 99px;
+      font-size: 14px; font-weight: 500;
+      font-family: 'DM Sans', sans-serif; cursor: pointer;
+    }
+
+    /* UPLOAD FOTO */
+    .upload-area {
+      border: 2px dashed #FCE7F3; border-radius: 12px;
+      padding: 20px; text-align: center;
+      cursor: pointer; transition: all .2s;
+    }
+    .upload-area:hover { border-color: #EC4899; background: #FDF2F8; }
+    #preview-modal { width: 100%; border-radius: 8px; margin-top: 10px; display: none; }
+  </style>
+</head>
+<body>
+<div class="admin-wrap">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-logo">
+      <img src="../assets/logo.png" alt="logo">
+      <div class="sidebar-logo-name">The Uniqost 21</div>
+    </div>
+    <div class="sidebar-menu">
+      <div class="sidebar-label">Menu</div>
+      <a href="dashboard.html" class="sidebar-item">
+        <span>📊</span> Dashboard
+      </a>
+      <a href="bookings.html" class="sidebar-item">
+        <span>📋</span> Data Booking
+      </a>
+      <a href="rooms.html" class="sidebar-item active">
+        <span>🏠</span> Kelola Kamar
+      </a>
+      <div class="sidebar-label">Akun</div>
+      <a href="../index.html" class="sidebar-item">
+        <span>🌐</span> Lihat Website
+      </a>
+      <a href="#" class="sidebar-item" onclick="logout()">
+        <span>🚪</span> Logout
+      </a>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+    <div class="main-header">
+      <div>
+        <div class="main-title">Kelola Kamar 🏠</div>
+        <div class="main-sub">Tambah, edit, dan hapus data kamar</div>
+      </div>
+      <button class="btn-add" onclick="bukaModal()">+ Tambah Kamar</button>
+    </div>
+
+    <div class="room-grid" id="room-grid">
+      <p style="color:#9CA3AF">Memuat data kamar...</p>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL TAMBAH/EDIT KAMAR -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <div class="modal-title" id="modal-title">Tambah Kamar</div>
+
+    <input type="hidden" id="room-id">
+
+    <div class="form-group">
+      <label>Nama Kamar</label>
+      <input type="text" id="room-name" placeholder="Contoh: Kamar Deluxe A">
+    </div>
+    <div class="form-group">
+      <label>Harga per Bulan (Rp)</label>
+      <input type="number" id="room-price" placeholder="Contoh: 1200000">
+    </div>
+    <div class="form-group">
+      <label>Deskripsi</label>
+      <textarea id="room-desc" rows="3"
+        placeholder="Deskripsi singkat kamar"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Fasilitas</label>
+      <input type="text" id="room-facilities"
+        placeholder="Contoh: AC, WiFi, KM Dalam, Lemari">
+    </div>
+    <div class="form-group">
+      <label>Status Kamar</label>
+      <select id="room-status">
+        <option value="tersedia">🟢 Tersedia</option>
+        <option value="booking">🟡 Booking</option>
+        <option value="dipesan">🔴 Dipesan</option>
+        <option value="penuh">⚫ Penuh</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Foto Kamar</label>
+      <div class="upload-area" onclick="document.getElementById('foto-input').click()">
+        <div style="font-size:32px;margin-bottom:8px">📸</div>
+        <div style="font-size:13px;color:#6B7280">Klik untuk pilih foto</div>
+        <img id="preview-modal" alt="preview">
+      </div>
+      <input type="file" id="foto-input" accept="image/*"
+        style="display:none" onchange="previewFoto(this)">
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="tutupModal()">Batal</button>
+      <button class="btn-save" onclick="simpanKamar()">Simpan</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../supabase.js"></script>
+<script>
+  const ADMIN_EMAIL = 'emailadmin@gmail.com'
+  let editMode = false
+  let editId = null
+
+  async function cekAdmin() {
+    const { data: { user } } = await db.auth.getUser()
+    if (!user || user.email !== ADMIN_EMAIL) {
+      window.location.href = '../login.html'
+    }
+  }
+
+  async function loadRooms() {
+    const { data } = await db.from('rooms')
+      .select('*').order('created_at', { ascending: false })
+
+    const grid = document.getElementById('room-grid')
+    if (!data || data.length === 0) {
+      grid.innerHTML = '<p style="color:#9CA3AF">Belum ada kamar. Tambah kamar dulu!</p>'
+      return
+    }
+
+    grid.innerHTML = data.map(r => `
+      <div class="room-card">
+        <div class="room-card-img">
+          ${r.images
+            ? `<img src="${r.images}" alt="${r.name}">`
+            : '🛏️'}
+        </div>
+        <div class="room-card-body">
+          <div class="room-card-name">${r.name}</div>
+          <div class="room-card-price">
+            Rp ${r.price.toLocaleString('id-ID')}/bulan
+          </div>
+          <span class="badge badge-${r.status}">● ${r.status}</span>
+          <div style="font-size:13px;color:#6B7280;margin-bottom:8px">
+            ${r.facilities || '-'}
+          </div>
+          <div class="room-card-actions">
+            <button class="btn-edit" onclick="editKamar('${r.id}')">✏️ Edit</button>
+            <button class="btn-delete" onclick="hapusKamar('${r.id}')">🗑️ Hapus</button>
+          </div>
+        </div>
+      </div>
+    `).join('')
+  }
+
+  function bukaModal(id = null) {
+    editMode = false
+    editId = null
+    document.getElementById('modal-title').textContent = 'Tambah Kamar'
+    document.getElementById('room-id').value = ''
+    document.getElementById('room-name').value = ''
+    document.getElementById('room-price').value = ''
+    document.getElementById('room-desc').value = ''
+    document.getElementById('room-facilities').value = ''
+    document.getElementById('room-status').value = 'tersedia'
+    document.getElementById('preview-modal').style.display = 'none'
+    document.getElementById('modal-overlay').style.display = 'flex'
+  }
+
+  async function editKamar(id) {
+    const { data } = await db.from('rooms').select('*').eq('id', id).single()
+    if (!data) return
+
+    editMode = true
+    editId = id
+    document.getElementById('modal-title').textContent = 'Edit Kamar'
+    document.getElementById('room-id').value = id
+    document.getElementById('room-name').value = data.name
+    document.getElementById('room-price').value = data.price
+    document.getElementById('room-desc').value = data.description || ''
+    document.getElementById('room-facilities').value = data.facilities || ''
+    document.getElementById('room-status').value = data.status
+
+    if (data.images) {
+      const img = document.getElementById('preview-modal')
+      img.src = data.images
+      img.style.display = 'block'
+    } else {
+      document.getElementById('preview-modal').style.display = 'none'
+    }
+
+    document.getElementById('modal-overlay').style.display = 'flex'
+  }
+
+  function tutupModal() {
+    document.getElementById('modal-overlay').style.display = 'none'
+  }
+
+  function previewFoto(input) {
+    const file = input.files[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      const img = document.getElementById('preview-modal')
+      img.src = e.target.result
+      img.style.display = 'block'
+    }
+    reader.readAsDataURL(file)
+  }
+
+  async function simpanKamar() {
+    const name = document.getElementById('room-name').value.trim()
+    const price = document.getElementById('room-price').value
+    const description = document.getElementById('room-desc').value.trim()
+    const facilities = document.getElementById('room-facilities').value.trim()
+    const status = document.getElementById('room-status').value
+    const file = document.getElementById('foto-input').files[0]
+
+    if (!name || !price) {
+      alert('Nama kamar dan harga wajib diisi!')
+      return
+    }
+
+    let imageUrl = null
+
+    // Upload foto jika ada
+    if (file) {
+      const fileName = `rooms/${Date.now()}_${file.name}`
+      const { data: uploadData, error: uploadError } = await db.storage
+        .from('room-images')
+        .upload(fileName, file)
+
+      if (uploadError) {
+        alert('Gagal upload foto: ' + uploadError.message)
+        return
+      }
+
+      const { data: urlData } = db.storage
+        .from('room-images')
+        .getPublicUrl(fileName)
+      imageUrl = urlData.publicUrl
+    }
+
+    const payload = {
+      name, price: parseInt(price),
+      description, facilities, status,
+      ...(imageUrl && { images: imageUrl })
+    }
+
+    if (editMode && editId) {
+      const { error } = await db.from('rooms')
+        .update(payload).eq('id', editId)
+      if (error) { alert('Gagal update: ' + error.message); return }
+    } else {
+      const { error } = await db.from('rooms').insert(payload)
+      if (error) { alert('Gagal tambah: ' + error.message); return }
+    }
+
+    tutupModal()
+    loadRooms()
+  }
+
+  async function hapusKamar(id) {
+    if (!confirm('Yakin hapus kamar ini?')) return
+    await db.from('rooms').delete().eq('id', id)
+    loadRooms()
+  }
+
+  async function logout() {
+    await db.auth.signOut()
+    window.location.href = '../login.html'
+  }
+
+  cekAdmin()
+  loadRooms()
+</script>
+</body>
+</html>
